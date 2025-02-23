@@ -23,7 +23,7 @@ const {
 
     describe("Create Proposal", function(){
 
-        it("Should crete proposal", async function(){
+        it("Should create proposal", async function(){
             const {dao, owner} = await loadFixture(deployDAOFixture)
             const proposal = await dao.proposals(1)
             expect(proposal.title).to.equal(proposalTitle)
@@ -49,7 +49,7 @@ const {
 
         it("Should revert when the proposal does not exist", async function(){
             const {dao} = await loadFixture(deployDAOFixture)
-            await expect(dao.getProposalInfo(999)).to.be.revertedWith("ProposalDoesNotExist");
+            await expect(dao.getProposalInfo(999)).to.be.revertedWithCustomError("ProposalDoesNotExist");
         })
     })
 
@@ -70,13 +70,13 @@ const {
 
         it("Should revert when the proposal does not exist", async function(){
             const {dao} = await loadFixture(deployDAOFixture)
-    await expect(dao.voteProposal(999, vote)).to.be.revertedWith("ProposalDoesNotExist");
+    await expect(dao.voteProposal(999, vote)).to.be.revertedWithCustomError("ProposalDoesNotExist");
         })
 
         it("Should revert when the proposal is not active", async function(){
             const {dao} = await loadFixture(deployDAOFixture)
             await time.increase(30 * 60 + 1) // Aumentamos el tiempo para que la propuesta ya haya pasado
-            await expect(dao.voteProposal(1, vote)).to.be.revertedWith("ProposalDeadlineExceeded");
+            await expect(dao.voteProposal(1, vote)).to.be.revertedWithCustomError("ProposalDeadlineExceeded");
         })
     })
 
@@ -93,14 +93,14 @@ const {
 
         it("Should revert when the proposal does not exist", async function(){
             const {dao} = await loadFixture(deployDAOFixture)
-            await expect(dao.executeProposal(999)).to.be.revertedWith("ProposalDoesNotExist");
+            await expect(dao.executeProposal(999)).to.be.revertedWithCustomError("ProposalDoesNotExist");
         })
 
         it("Should revert when the proposal cannot be executed", async function(){
             const {dao} = await loadFixture(deployDAOFixture)
             let proposal = await dao.proposals(1)
             expect(proposal.executed).to.be.false
-            await expect(dao.executeProposal(1)).to.be.revertedWith("ProposalCannotBeExecuted");
+            await expect(dao.executeProposal(1)).to.be.revertedWithCustomError("ProposalCannotBeExecuted");
         })
     })
   })
