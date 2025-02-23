@@ -31,7 +31,6 @@ contract KeepCodingDAO is Proposal, Counter {
      */
 
      constructor() Counter(0){
-
      }
 
     /**
@@ -105,10 +104,10 @@ contract KeepCodingDAO is Proposal, Counter {
         Crea una propuesta e inicializa sus datos
      */
     function createProposal(string memory _title, string memory _description, string[] memory _options) public{
-        uint256 proposalId = current();
+        uint256 proposalId = Counter.getCounterValue();
 
         MultipleChoiceProposal storage proposal = proposals[proposalId];
-        proposal.id = proposalId;
+        proposal.proposalId = proposalId;
         proposal.title = _title;
         proposal.description = _description;
         proposal.creator = msg.sender;
@@ -143,7 +142,7 @@ contract KeepCodingDAO is Proposal, Counter {
         proposalInfo.optionsText = new string[](proposal.optionsNumber);
 
         //inicializar el array optionsVotes dentro del struct
-        proposalInfo.optionsVotes = new uint256[](proposal.optionsNumber);
+        proposalInfo.optionsVotes = new uint8[](proposal.optionsNumber);
 
         //iterar sobre las opciones. Pista usar el campo optionsNumber como tope del bucle
         for(uint8 i = 0; i < proposals[_proposalId].optionsNumber; i++){
