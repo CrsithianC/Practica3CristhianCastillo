@@ -7,32 +7,43 @@ const initializeContract = async () => {
     const response = await fetch('../../artifacts/contracts/DAO.sol/KeepCodingDAO.json')
     const data = await response.json()
 
-    //provider
+    const provider = new ethers.providers.JsonRpcProvider(HARDHAT_URL);
     
-    //read contract
+    const readContract = new ethers.Contract(DAO_ADDRESS_LOCALHOST, data.abi, provider);
     
-    //signer
+    const wallet = new ethers.Wallet(SIGNER_PRIVATEKEY, provider);
     
-    //write contract
+    const writeContract = new ethers.Contract(DAO_ADDRESS_LOCALHOST, data.abi, wallet);
     
-    //return provider, signer, write contract, read contract
+    return { provider, wallet, writeContract, readContract };
     
 }
 
 const createProposal = async (title, desc, options) => {
-   
+    const { writeContract } = await initializeContract();
+    const tx = await writeContract.createProposal(title, desc, options);
+    await tx.wait();
+    console.log("Has creado la propuesta correctamente");
 }
 
 const getProposalInfo = async (proposalId) => {
-    
+    const { readContract } = await initializeContract();
+    const proposalInfo = await readContract.getProposalInfo(proposalId);
+    return proposalInfo;
 }
 
 const voteProposal = async (proposalId, vote) => {
-    
+    const { writeContract } = await initializeContract();
+    const tx = await writeContract.voteProposal(proposalId, vote);
+    await tx.wait();
+    console.log("Has votado correctamente");
 }
 
 const executeProposal = async (proposalId) => {
-
+    const { writeContract } = await initializeContract();
+    const tx = await writeContract.executeProposal(proposalId);
+    await tx.wait();
+    console.log("La propuesta ha sido ejecutada");
 }
 
 
